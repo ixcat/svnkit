@@ -1,0 +1,70 @@
+#	   user: blade8086
+#	machine: frankenbean.onenine.net
+#	   tree: /tmp/svnkit/nbsd
+#	   date: Mon Feb 19 06:13:35 2007
+
+# .
+/set type=file uid=506 gid=506 mode=0750 nlink=1 flags=none
+.               type=dir nlink=7 size=512 time=1171865350.895012000
+    .profile    nlink=2 size=589 time=1171865350.895012000
+    svn-dotprofile \
+                nlink=2 size=589 time=1171865350.895012000
+
+# ./archive
+archive         type=dir mode=0770 nlink=2 size=512 \
+                time=1171865350.895012000
+# ./archive
+..
+
+
+# ./bin
+bin             type=dir nlink=2 size=512 time=1171865350.895012000
+    svnkit      size=7959 time=1171865350.895012000
+    svnshell    mode=0755 size=11042 time=1171865350.895012000
+# ./bin
+..
+
+
+# ./dumps
+dumps           type=dir mode=0770 nlink=2 size=512 \
+                time=1171865350.895012000
+# ./dumps
+..
+
+
+# ./etc
+etc             type=dir nlink=3 size=512 time=1171865607.0
+    authz       size=104 time=1171865350.895012000
+    inetd.conf.svnserve \
+                size=160 time=1171865350.895012000
+    nightly-incremental.cron \
+                mode=0640 size=138 time=1171865350.895012000
+    passwd      size=21 time=1171865350.895012000
+    weekly-full.cron \
+                mode=0640 size=113 time=1171865350.895012000
+
+# ./etc/policies
+policies        type=dir mode=0755 nlink=3 size=512 \
+                time=1171865350.895012000
+
+# ./etc/policies/default
+default         type=dir nlink=2 size=512 time=1171865607.0
+    svnserve.conf \
+                size=212 time=1171865350.895012000
+# ./etc/policies/default
+..
+
+# ./etc/policies
+..
+
+# ./etc
+..
+
+
+# ./repos
+repos           type=dir nlink=2 size=512 time=1171865350.895012000
+# ./repos
+..
+
+..
+
