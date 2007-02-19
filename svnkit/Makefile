@@ -9,12 +9,12 @@ MTREEFILE=nbsd.mtree
 install: unmtree
 	mkdir -p $(DESTDIR);
 	chown $(ADMINISTRATIVE_USER):$(ADMINISTRATIVE_USER) $(DESTDIR);
-	cd nbsd && find . | cpio -p $(DESTDIR)
+	cd nbsd && find . \! -regex '.*\.svn.*' | cpio -p $(DESTDIR)
 
 mtreefile: $(MTREEFILE)
 
 $(MTREEFILE):
-	mtree -c -p nbsd > $(MTREEFILE)
+	mtree -X nbsd.mtree-exclude -c -p nbsd > $(MTREEFILE)
 
 unmtree: $(MTREEFILE)
 	cat $(MTREEFILE) |mtree -Up nbsd
