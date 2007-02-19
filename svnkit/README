@@ -46,19 +46,21 @@ To install the system, perform the following steps:
       nbsd
       nbsd/archive
       nbsd/bin
-      nbsd/bin/svn-setup
+      nbsd/bin/svnkit
       nbsd/bin/svnshell
       nbsd/dumps
+      nbsd/repos
       nbsd/etc
       nbsd/etc/policies
       nbsd/etc/policies/default
-      nbsd/etc/policies/default/authz
-      nbsd/etc/policies/default/passwd
       nbsd/etc/policies/default/svnserve.conf
-      nbsd/etc/inetd.conf.svnserve
-      nbsd/repos
+      nbsd/etc/weekly-full.cron
+      nbsd/etc/passwd
+      nbsd/etc/authz
+      nbsd/etc/nightly-incremental.cron
       nbsd/svn-dotprofile
       nbsd/.profile
+      nbsd.mtree
       
     Each of these files and directories are set with mode 750 and permissions
     svnadmin:svnadmin, with the exception of the 'dumps' and 'archive' 
@@ -66,11 +68,13 @@ To install the system, perform the following steps:
     write files to that directory.
   - edit the inetd.conf.svnserve file if necessary, adding it to your inetd 
     configuration, and restart inetd.
-  - Edit the files in the etc/policies/default location as necessary for your
-    site. In this example configuration, authorization and permissions are 
-    currently set on a system-wide basis. Various configurations of 
-    per-project users, access permissions, etc. should probably be considered
-    when necessary in your project.
+  - Edit the etc/policies/default/svnserve.conf, etc/passwd and etc/authz 
+    files as necessary for your site. The 'default' policy as configured
+    here sets authorization and permissions on a system-wide basis. 
+    If other users and access permissions schemes are necessary for your
+    repositories, the appropriate 'policy' directory can be created to hold 
+    the repository configuration files for use later in the 'apply_policy'
+    stage.
   - create any new repositories using via `svnkit` as follows::
 
       svnadmin $ svnkit create_repos reposname
