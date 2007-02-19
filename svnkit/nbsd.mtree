@@ -1,14 +1,14 @@
 #	   user: blade8086
 #	machine: frankenbean.onenine.net
 #	   tree: /nbsd/Workspace/svnkit/trunk/svnkit/nbsd
-#	   date: Mon Feb 19 17:30:02 2007
+#	   date: Mon Feb 19 17:35:29 2007
 
 # .
-/set type=file uid=506 gid=506 mode=0750 nlink=1 flags=none
-.               type=dir nlink=8 size=4096 time=1171905079.0
-    .profile    nlink=2 size=627 time=1171906038.0
+/set type=file uid=506 gid=506 mode=0755 nlink=1 flags=none
+.               type=dir mode=0750 nlink=8 size=4096 time=1171905079.0
+    .profile    uid=0 gid=0 size=627 time=1171906412.0
     svn-dotprofile \
-                nlink=2 size=627 time=1171906038.0
+                uid=0 gid=0 size=633 time=1171906413.0
 
 # ./archive
 /set type=file uid=0 gid=0 mode=0755 nlink=1 flags=none
@@ -19,16 +19,15 @@ archive         type=dir uid=506 gid=506 mode=0770 nlink=3 size=4096 \
 
 
 # ./bin
-/set type=file uid=506 gid=506 mode=0755 nlink=1 flags=none
-bin             type=dir mode=0750 nlink=3 size=4096 time=1171902794.0
-    svnkit      mode=0750 size=8065 time=1171906180.0
-    svnshell    size=11042 time=1171902794.0
+bin             type=dir uid=506 gid=506 mode=0750 nlink=3 size=4096 \
+                time=1171902794.0
+    svnkit      size=8059 time=1171906521.0
+    svnshell    uid=506 gid=506 size=11042 time=1171902794.0
 # ./bin
 ..
 
 
 # ./dumps
-/set type=file uid=0 gid=0 mode=0755 nlink=1 flags=none
 dumps           type=dir uid=506 gid=506 mode=0770 nlink=3 size=4096 \
                 time=1171902795.0
 # ./dumps

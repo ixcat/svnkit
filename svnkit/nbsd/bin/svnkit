@@ -187,7 +187,7 @@ dump_repos() { # usage: dump_repos <full|incremental> repos
 		cat >> ${dump_history} <<EOF
 
 $me $today
---------------------
+-----------------
 
 Unattended full backup of $repos into::
 
@@ -269,7 +269,7 @@ EOF
 		cat >> ${dump_history} <<EOF
 
 $me $today
---------------------
+-----------------
 
 Unattended incremental backup of $repos into::
 
