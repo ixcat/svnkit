@@ -13,6 +13,7 @@ repository_host="svn";
 repository_owner='svnadmin';
 repository_group='svnadmin';
 repository_mode='750';
+history_log_mode='660';
 fs_type='fsfs';
 dump_dir="${storage_root}/dumps";
 dump_history="${dump_dir}/HISTORY";
@@ -279,6 +280,7 @@ cleaned stale backups: $stale_dumps
 EOF
 	fi
 
+	chmod ${history_log_mode} ${dump_history};
 
 }
 

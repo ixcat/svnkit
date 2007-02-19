@@ -7,7 +7,7 @@ export SVNROOT="/var/local/apps/svn";
 export SVNDUMPS="${SVNROOT}/dumps";
 export SVNREPOS="${SVNROOT}/repos";
 
-if [ "`uname -s`" -eq "Linux" ]; then
+if [ "`uname -s`" = "Linux" ]; then
 	BINPATH="/usr/bin:/usr/sbin:";
 else
 	BINPATH="/usr/pkg/bin:/usr/pkg/sbin:";
