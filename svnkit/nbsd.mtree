@@ -1,0 +1,75 @@
+#	   user: blade8086
+#	machine: frankenbean.onenine.net
+#	   tree: /nbsd/Workspace/svnkit/trunk/svnkit/nbsd
+#	   date: Mon Feb 19 17:45:12 2007
+
+# .
+/set type=file uid=506 gid=506 mode=0755 nlink=1 flags=none
+.               type=dir mode=0750 nlink=8 size=4096 time=1171905079.0
+    .profile    uid=0 gid=0 size=627 time=1171906412.0
+    svn-dotprofile \
+                uid=0 gid=0 size=633 time=1171906413.0
+
+# ./archive
+/set type=file uid=0 gid=0 mode=0755 nlink=1 flags=none
+archive         type=dir uid=506 gid=506 mode=0770 nlink=3 size=4096 \
+                time=1171902792.0
+# ./archive
+..
+
+
+# ./bin
+bin             type=dir uid=506 gid=506 mode=0750 nlink=3 size=4096 \
+                time=1171902794.0
+    svnkit      size=7991 time=1171907107.0
+    svnshell    uid=506 gid=506 size=11042 time=1171902794.0
+# ./bin
+..
+
+
+# ./dumps
+dumps           type=dir uid=506 gid=506 mode=0770 nlink=3 size=4096 \
+                time=1171902795.0
+# ./dumps
+..
+
+
+# ./etc
+/set type=file uid=506 gid=506 mode=0750 nlink=1 flags=none
+etc             type=dir nlink=4 size=4096 time=1171903294.0
+    authz       size=141 time=1171904388.0
+    nightly-incremental.cron \
+                mode=0640 size=194 time=1171904388.0
+    passwd      size=21 time=1171902801.0
+    weekly-full.cron \
+                mode=0640 size=161 time=1171904389.0
+
+# ./etc/policies
+/set type=file uid=0 gid=0 mode=0755 nlink=1 flags=none
+policies        type=dir uid=506 gid=506 nlink=4 size=4096 \
+                time=1171902798.0
+
+# ./etc/policies/default
+/set type=file uid=506 gid=506 mode=0750 nlink=1 flags=none
+default         type=dir nlink=3 size=4096 time=1171902799.0
+    svnserve.conf \
+                size=786 time=1171904389.0
+# ./etc/policies/default
+..
+
+# ./etc/policies
+..
+
+# ./etc
+..
+
+
+# ./repos
+/set type=file uid=0 gid=0 mode=0755 nlink=1 flags=none
+repos           type=dir uid=506 gid=506 mode=0750 nlink=3 size=4096 \
+                time=1171902796.0
+# ./repos
+..
+
+..
+
