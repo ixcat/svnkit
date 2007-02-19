@@ -178,7 +178,7 @@ dump_repos() { # usage: dump_repos <full|incremental> repos
 			oldfull=1;
 		fi
 
-		echo "# => dumping ${repos} (r1:r${latest})"
+		echo "# ==> dumping ${repos} (r1:r${latest})"
 		svnadmin dump ${repos_path} -r 1:${latest} \
 			|gzip -f - > $dumpfile;
 		echo ${latest} > ${revfile};
