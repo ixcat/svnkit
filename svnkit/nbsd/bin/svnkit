@@ -288,7 +288,7 @@ dump_all() { # usage: dump_all <full|incremental>
                 echo "usage: dump_all <full|incremental>";
                 return;
         fi
-	set -- "${repository_dir}/*";
+	set -- ${repository_dir}/*;
 	for repos; do
 		repos="`basename $repos`";
 		dump_repos $type $repos;
