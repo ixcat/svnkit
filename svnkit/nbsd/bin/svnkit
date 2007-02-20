@@ -55,6 +55,7 @@ set_env() {
 apply_policy() { # usage: apply_policy repos <policy>
 	if [ "$#" -lt "1" ]; then
 		echo "usage: apply_policy repos <policy>";
+		return;
 	fi
 	repos=$1; policy=$2;
 	[ -z "$policy" ] && policy="default";
