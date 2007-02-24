@@ -33,10 +33,12 @@ Usage: $me cmd args
     - apply_policy repos <policy>:
         apply policy 'policy' to repository 'repos'. 
         'default' policy is used if none is given.
-    - create_repos reposname : 
-        create repository called 'reposname'
     - create_import repository sourcedir: 
         import 'sourcedir' into existing repository 'repository'
+    - create_repos reposname : 
+        create repository called 'reposname' with no repository policy.
+    - create_with_policy repository policy:
+        create repository called 'reposname' using policy 'policy'.
     - dump_repos <full|incremental> repos :
         create a full or needed incremental dump of repository 'repos' 
     - dump_all <full|incremental> : 
@@ -70,27 +72,14 @@ apply_policy() { # usage: apply_policy repos <policy>
 	cp -pr ${policy_dir}/${policy}/* ${config}
 }
 
+create_with_policy() { # usage: create_with_policy repository policy
 
-create_repos() { # usage: create_repos reposname
-
-	if [ "$#" -lt "1" ]; then 
-		echo "usage: create_repos reposname";
+	if [ "$#" -lt "1" ]; then
+		echo "usage: create_with_policy repository <policy>";
 		return;
 	fi
-
-	repository=`basename $1`; # in case we get a full path
-	rpath="${repository_dir}/${repository}";
-
-	echo "svnadmin create --fs-type $fs_type $rpath";
-	svnadmin create --fs-type $fs_type $rpath;
-
-	[ "$?" -ne "0" ] && return;
-
-	echo "chown -R ${repository_owner}:${repository_group} $rpath";
-	chown -R ${repository_owner}:${repository_group} $rpath;
-
-	echo "chmod -R $repository_mode $rpath";
-	chmod -R $repository_mode $rpath;
+	repos=$1; policy=$2;
+	create_repos $1 && apply_policy $1 $2;
 
 }
 
@@ -117,6 +106,30 @@ create_import() { # usage: create_import repository sourcedir
 	sh -c "$cmd"; # get strange 'too many arguments' errors w/o this..
 
 }
+
+create_repos() { # usage: create_repos reposname
+
+	if [ "$#" -lt "1" ]; then 
+		echo "usage: create_repos reposname";
+		return;
+	fi
+
+	repository=`basename $1`; # in case we get a full path
+	rpath="${repository_dir}/${repository}";
+
+	echo "svnadmin create --fs-type $fs_type $rpath";
+	svnadmin create --fs-type $fs_type $rpath;
+
+	[ "$?" -ne "0" ] && return;
+
+	echo "chown -R ${repository_owner}:${repository_group} $rpath";
+	chown -R ${repository_owner}:${repository_group} $rpath;
+
+	echo "chmod -R $repository_mode $rpath";
+	chmod -R $repository_mode $rpath;
+
+}
+
 
 # Repository 'Dumping' (backups)
 # 
