@@ -151,3 +151,17 @@ No svnkit utility command yet exists to easily restore the dumped version of
 a repository. Until such time that a restoration wrapper is written, the 
 'svnadmin' command makes restoration of repository dumps fairly trivial. 
 
+Upgrading the SVN System Software
+=================================
+
+A rough guide.. this is covered in the svn book, but essentially:
+
+  - ensure dumps are up to date
+  - update software
+  - wipe repositories and restore
+
+
+
+
+
+
