@@ -1,3 +1,3 @@
 # svnkit weekly-full.cron : weekly subversion full backups
 # $Id$
-13 10 * * 7 . ~/.profile; svnkit dump_all full
+13 09 * * 7 . ~/.profile; svnkit dump_all full
