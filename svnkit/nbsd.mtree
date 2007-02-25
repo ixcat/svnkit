@@ -1,7 +1,7 @@
 #	   user: blade8086
 #	machine: frankenbean.onenine.net
 #	   tree: /.amd/homedirs/home/blade8086/Workspace.nu/svnkit/trunk/svnkit/nbsd
-#	   date: Sun Feb 25 21:08:15 2007
+#	   date: Sun Feb 25 21:12:10 2007
 
 # .
 /set type=file uid=506 gid=506 mode=0750 nlink=1 flags=none
@@ -23,15 +23,16 @@ archive         type=dir uid=506 gid=506 mode=0770 nlink=3 size=4096 \
 
 
 # ./bin
-bin             type=dir uid=506 gid=506 mode=0750 nlink=3 size=4096 \
-                time=1171902794.0
-    svnkit      mode=0700 size=8372 time=1172286250.0
-    svnshell    uid=506 gid=506 size=11042 time=1171902794.0
+/set type=file uid=506 gid=506 mode=0555 nlink=1 flags=none
+bin             type=dir mode=0750 nlink=3 size=4096 time=1171902794.0
+    svnkit      size=8372 time=1172286250.0
+    svnshell    size=11042 time=1171902794.0
 # ./bin
 ..
 
 
 # ./dumps
+/set type=file uid=0 gid=0 mode=0755 nlink=1 flags=none
 dumps           type=dir uid=506 gid=506 mode=0770 nlink=3 size=4096 \
                 time=1171902795.0
 # ./dumps
