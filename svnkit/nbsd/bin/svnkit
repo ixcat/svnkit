@@ -1,0 +1,319 @@
+#!/bin/sh
+# svnkit subversion administrative utility script
+# $Id$
+
+# Directory Tree Configuration
+# ----------------------------
+
+storage_root="/var/local/apps/svn";
+etc_dir="${storage_root}/etc";
+policy_dir="${etc_dir}/policies";
+repository_dir="${storage_root}/repos";
+repository_host="svn";
+repository_owner='svnadmin';
+repository_group='svnadmin';
+repository_mode='750';
+fs_type='fsfs';
+dump_dir="${storage_root}/dumps";
+dump_history="${dump_dir}/HISTORY";
+dirs="$repository_dir $dump_dir";
+
+# Auto-Globals
+# ------------
+
+me="`basename $0`"
+
+# Functions
+# ---------
+
+help_exit() {
+	cat <<EOF
+Usage: $me cmd args
+  where 'cmd' and 'args' are one of:
+    - apply_policy repos <policy>:
+        apply policy 'policy' to repository 'repos'. 
+        'default' policy is used if none is given.
+    - create_import repository sourcedir: 
+        import 'sourcedir' into existing repository 'repository'
+    - create_repos reposname : 
+        create repository called 'reposname' with no repository policy.
+    - create_with_policy repository policy:
+        create repository called 'reposname' using policy 'policy'.
+    - dump_repos <full|incremental> repos :
+        create a full or needed incremental dump of repository 'repos' 
+    - dump_all <full|incremental> : 
+        dump all known repositories in either full or incremental mode.
+    - shell repos :
+        spawn a 'svnshell' command inside repository 'repos'
+EOF
+exit 1;
+}
+
+set_env() {
+	repository=$1;
+	echo export SVNROOT="svn://${repository_host}/$repository";
+}
+
+apply_policy() { # usage: apply_policy repos <policy>
+	if [ "$#" -lt "1" ]; then
+		echo "usage: apply_policy repos <policy>";
+		return;
+	fi
+	repos=$1; policy=$2;
+	[ -z "$policy" ] && policy="default";
+	policy_location="${policy_dir}/${policy}";
+
+	if [ ! -d "${policy_location}" ]; then
+		echo "error: policy ${policy} does not exist. cannot apply.";
+		return;
+	fi
+
+	config="${repository_dir}/${repos}/conf/";
+	cp -pr ${policy_dir}/${policy}/* ${config}
+}
+
+create_with_policy() { # usage: create_with_policy repository policy
+
+	if [ "$#" -lt "1" ]; then
+		echo "usage: create_with_policy repository <policy>";
+		return;
+	fi
+	repos=$1; policy=$2;
+	create_repos $1 && apply_policy $1 $2;
+
+}
+
+# this function imports the contents of the directory tree rooted 
+# in 'sourcedir' to the path /trunk/basename_of_sourcedir 
+# in the given repository 
+create_import() { # usage: create_import repository sourcedir 
+
+	if [ "$#" -lt "2" ]; then
+		echo "usage: create_import repository sourcedir";
+		return;
+	fi
+
+	repository=$1; sourcedir=$2; # fixme arg checks
+	repository="file://${repository_dir}/${repository}";
+
+	targetdir=`basename $sourcedir`;
+	echo "# importing $sourcedir to ${repository}/trunk/${targetdir}";
+
+	cmd="svn import -m 'Initial import of ${targetdir}' ";
+	cmd="$cmd ${sourcedir} ${repository}/trunk/${targetdir}";
+
+	echo $cmd;
+	sh -c "$cmd"; # get strange 'too many arguments' errors w/o this..
+
+}
+
+create_repos() { # usage: create_repos reposname
+
+	if [ "$#" -lt "1" ]; then 
+		echo "usage: create_repos reposname";
+		return;
+	fi
+
+	repository=`basename $1`; # in case we get a full path
+	rpath="${repository_dir}/${repository}";
+
+	echo "svnadmin create --fs-type $fs_type $rpath";
+	svnadmin create --fs-type $fs_type $rpath;
+
+	[ "$?" -ne "0" ] && return;
+
+	echo "chown -R ${repository_owner}:${repository_group} $rpath";
+	chown -R ${repository_owner}:${repository_group} $rpath;
+
+	echo "chmod -R $repository_mode $rpath";
+	chmod -R $repository_mode $rpath;
+
+}
+
+
+# Repository 'Dumping' (backups)
+# 
+# - on all dumps, leave a 'lastdumped' record
+# - on incremental dumps, use the 'lastdumped' and 'latest' revision
+#   to calculate the incremental dump command
+# - on full dumps, use the last transaction to dump r1 -> latest
+#   rather than just doing a 'raw' full dump. This means any
+#   commmits happening between 'latest' calculation and 'dump'
+#   calculation will be lost, but such is life.. this makes the
+#   logic much more uniform.
+# 
+# todo:
+# 
+#  - full dump should check for staleness as well..
+
+# new 'unified' dump function .. 
+dump_repos() { # usage: dump_repos <full|incremental> repos
+
+	type=$1; repos=$2; 
+
+        if [ "$type" != "full" -a "$type" != "incremental" ]; then
+		echo "usage: dump_repos <full|incremental> repos";
+		return;
+	fi
+
+	today="`date +%Y-%m-%d`"
+
+	repos_path="${repository_dir}/${repos}";
+	latest=`svn info file://${repos_path} \
+		|grep '^Revision:' |awk '{print $2}'`;
+
+	# for full dumps, simply backup any existing full dumps if stale,
+	# dump revisions 1 -> latests, and update marker files.
+
+	if [ "$type" = "full" ]; then
+
+		oldfull=0;
+		echo "# >>> processing full dump for ${repos}:";
+
+		dumpfile="${dump_dir}/${repos}.full.gz";
+		olddump="${dump_dir}/${repos}.last-full.gz";
+		
+		revfile="${dump_dir}/${repos}.full.gz.rev";
+		oldrev="${dump_dir}/${repos}.last-full.gz.rev";
+
+		if [ -f "$dumpfile" -a -f "$revfile" ]; then 
+
+			lastrev="`cat $revfile`";
+			if [ "$lastrev" = "$latest" ]; then
+				echo "# ==> skipping : backups current";
+				return;
+			fi
+
+			echo "# ==> saving previous full dump";
+			mv ${dumpfile} ${olddump};
+			# shouldn't assume revfile is there, but oh well..
+			[ -f "${revfile}" ] && \
+				mv -f ${revfile} ${oldrev}
+			oldfull=1;
+		fi
+
+		echo "# ==> dumping ${repos} (r1:r${latest})"
+		svnadmin dump ${repos_path} -r 1:${latest} \
+			|gzip -f - > $dumpfile;
+		echo ${latest} > ${revfile};
+		
+		cat >> ${dump_history} <<EOF
+
+$me $today
+-----------------
+
+Unattended full backup of $repos into::
+
+  $dumpfile
+
+created old-full backup: $oldfull (0 = false, 1 = true)
+
+EOF
+	fi
+
+	# for incremental dumps, compute last backed-up version from the 
+	# latest marker, determine if the backup is stale, 
+	# and dump incrementally.
+	# 
+	# incremental cleanup is performed for any incrementals older than
+	# the 'last-full' secondary full dump. 
+	# 
+	# this implies that if two sucsessive full backups fail and the
+	# repository is corrupt, there will be no path to recovery using
+	# the incremental approach. This is deemed acceptable as thsese
+	# backups are primarily intended to create files for online backup
+	# and to feed longer-term offline bakcup storage, rather than
+	# replacing offline backup storage completely.
+	# 
+	# Known-good archival copies of the repository should be made 
+	# at the appropriate intervals to prevent problems of silent
+	# data loss in the case of script failure here.
+	# 
+
+	if [ "$type" = "incremental" ]; then
+
+		echo "# >>> processing incremental dump for ${repos}:";
+
+		lastrevfile="`ls -t ${dump_dir}/${repos}.*.rev 2>/dev/null \
+			|head -n 1`";
+
+		if [ ! -f "$lastrevfile" ]; then
+			echo "# ==> skipping : unknown last backup";
+			return;
+		fi
+
+		lastrev="`cat $lastrevfile`";
+		if [ ! -n "$lastrev" ]; then
+			echo "# ==> skipping : unknown last backup";
+			return;
+		fi
+
+		if [ "$lastrev" = "$latest" ]; then
+			echo "# ==> skipping : backups current";
+			return;
+		fi
+
+		dumpfile="${dump_dir}/${repos}.r${lastrev}-${latest}.gz";
+		revfile="${dump_dir}/${repos}.r${lastrev}-${latest}.gz.rev";
+
+		echo "# ==> dumping ${repos} (r${lastrev}:r${latest})"
+		svnadmin dump ${repos_path} --incremental \
+			-r ${lastrev}:${latest} \
+			|gzip -f - > $dumpfile;
+		echo ${latest} > ${revfile};
+
+		echo "# ==> cleaning stale incrementals for ${repos}"
+
+		incr_found_full='';
+		stale_dumps="";
+
+		for dump in `ls -t ${dump_dir}/${repos}.*.gz`; do
+			if [ "$incr_found_full" ]; then
+				echo "# ===> removing $dump";
+				rm ${dump} ${dump}.rev;
+				stale_dumps="$stale_dumps $dump";
+			else
+				match="`expr $dump : '.*\.last-full\.gz'`";
+				if [ "$match" -ne "0" ]; then
+					incr_found_full=1;
+				fi
+			fi
+		done
+		cat >> ${dump_history} <<EOF
+
+$me $today
+-----------------
+
+Unattended incremental backup of $repos into::
+
+  $dumpfile.
+
+cleaned stale backups: $stale_dumps
+
+EOF
+	fi
+
+}
+
+dump_all() { # usage: dump_all <full|incremental>
+	type=$1;
+        if [ "$type" != "full" -a "$type" != "incremental" ]; then
+                echo "usage: dump_all <full|incremental>";
+                return;
+        fi
+	set -- ${repository_dir}/*;
+	for repos; do
+		repos="`basename $repos`";
+		dump_repos $type $repos;
+	done
+}
+
+shell() { # usage: shell repos
+	if [ "$#" -lt "1" ]; then
+		echo "usage: shell repos";
+		return;
+	fi
+	svnshell ${repository_dir}/$1;
+}
+
+[ "$#" -lt "1" ] && help_exit || eval $*

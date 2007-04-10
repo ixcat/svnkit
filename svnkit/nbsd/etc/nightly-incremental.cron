@@ -1,0 +1,3 @@
+# svnkit nightly-incremental.cron : nightly subversion incremental backups
+# $Id$
+13 9 * * 1-6 . ~/.profile; svnkit dump_all incremental
