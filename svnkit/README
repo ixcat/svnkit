@@ -146,10 +146,16 @@ nightly. If you wish to enable this type of backup policy, simply entable
 cron for the svnbackup user and load the files as as follows ::
 
   svn $ cat etc/*cron |crontab -
+
+It should be noted that on systems with login.conf(5) capability, such
+as FreeBSD 2.2.2 or later, the shared nature of the ~/.login_conf file 
+for the svnadmin and svnbkup users may prevent cron from functioning properly. 
+One possible solution to this problem is to remove ~/.login_conf from the 
+shared home directory. See the login.conf(5) manual page for more details.
    
 No svnkit utility command yet exists to easily restore the dumped version of 
 a repository. Until such time that a restoration wrapper is written, the 
-'svnadmin' command makes restoration of repository dumps fairly trivial. 
+'svnadmin load' command makes restoration of repository dumps fairly trivial. 
 
 Upgrading the SVN System Software
 =================================
@@ -159,9 +165,4 @@ A rough guide.. this is covered in the svn book, but essentially:
   - ensure dumps are up to date
   - update software
   - wipe repositories and restore
-
-
-
-
-
 
