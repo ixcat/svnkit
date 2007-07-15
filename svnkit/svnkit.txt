@@ -1,0 +1,168 @@
+.. $Id$
+
+===========================================
+199Technologies Subversion Toolkit (svnkit)
+===========================================
+:Author: C.Turner
+:Revision: $Revision$
+
+Overview
+========
+
+This set of files attempts to implement a toolkit and documentation for 
+implementing subversion repositories in a manner supporting: 
+
+  - multiple users and permissions
+  - remote access
+  - automatic nightly repository backups
+
+without a high degree of difficulty or administrative overhead.
+
+Organisation & Installation
+===========================
+
+The system is intended to be installed into an appropriate application
+prefix (usually /var/local/apps for 199Technologies systems) which will
+become the home directory for the subversion administrative account.
+
+Common functions and environment configuration is installed into the 
+administrative users shell account and a set of named scripts leverages
+the common configuration to provide scripted access to the system.
+
+To install the system, perform the following steps:
+
+  - create any intermediate paths and/or filesystems for the subversion
+    application installation path.
+  - add a subversion group and a subversion administrative user and 
+    backup user to that group. The users should have their home directory
+    as the application installation path.
+    (on DragonFly, the svnadmin.adduser and svnbkup.adduser files are 
+    provided for this purpose, simply adduser -f the files and add the 
+    the svnbkup user to the groups file.)
+  - copy in the contents of the 'nbsd' directory provided with this 
+    document to the subversion install path. Currently, the files 
+    are as follows::
+
+      nbsd
+      nbsd/archive
+      nbsd/bin
+      nbsd/bin/svnkit
+      nbsd/bin/svnshell
+      nbsd/dumps
+      nbsd/repos
+      nbsd/etc
+      nbsd/etc/policies
+      nbsd/etc/policies/default
+      nbsd/etc/policies/default/svnserve.conf
+      nbsd/etc/weekly-full.cron
+      nbsd/etc/passwd
+      nbsd/etc/authz
+      nbsd/etc/nightly-incremental.cron
+      nbsd/svn-dotprofile
+      nbsd/.profile
+      nbsd.mtree
+      
+    Each of these files and directories are set with mode 750 and permissions
+    svnadmin:svnadmin, with the exception of the 'dumps' and 'archive' 
+    directory having mode 770 such that the subversion backup user can 
+    write files to that directory.
+  - edit the inetd.conf.svnserve file if necessary, adding it to your inetd 
+    configuration, and restart inetd.
+  - Edit the etc/policies/default/svnserve.conf, etc/passwd and etc/authz 
+    files as necessary for your site. The 'default' policy as configured
+    here sets authorization and permissions on a system-wide basis. 
+    If other users and access permissions schemes are necessary for your
+    repositories, the appropriate 'policy' directory can be created to hold 
+    the repository configuration files for use later in the 'apply_policy'
+    stage.
+  - create any new repositories using via `svnkit` as follows::
+
+      svnadmin $ svnkit create_repos reposname
+
+    this will create a repository with the appropriate permissions
+    in ~svnadmin/repos/reposname.
+  - Add the appropriate policy template to your repository as follows::
+
+      svnadmin $ svnkit apply_policy repos <policy>
+
+    This will configure the repository by copying in all files in 
+    ~svnadmin/etc/policies/policyname to reposdir/repos/conf/. If no
+    policy is given, the 'default' policy is applied. 
+  - import any necessary files as follows::
+
+      svnadmin $ svnkit create_import repository /path/to/sources
+
+    This will import the contents of 'sources' to the location trunk/sources
+    in the repository named 'repository'.
+
+  - if you plan on using the svnshell script via the svnkit 'shell' command,
+    ensure it is up to date with the version of subversion being used by 
+    your site.
+
+    Ideally, the script would would be part of the standard subversion 
+    package installation, but it is currently not for pkgsrc and portage 
+    and the author has not taken the time to get it included by default - 
+    it should be in the appropriate source tarball. On pkgsrc systems,
+    you will need to ensure that the `python` executable is available
+    in your path, which is conveniently done via pkg_alternatives for
+    the test setup used to create this documentation as follows::
+    
+      # pkg_alternatives manual python24-2.4.3nb3
+
+  - At this point, your new repository should be accessable as follows::
+
+      $ svn (cmd) svn://hostname/reposname
+
+    Where `hostname` and `reposname` are substituted appropriately for
+    your host and repository names. It may be most convenient to set up
+    a DNS pointer to the subversion server such that if the repositories
+    are later relocated, any checked out source code will not need to
+    be repointed to the new location.
+ 
+System Backups & Recovery
+=========================
+
+The 'dump_repos' and 'dump_all' commands can be used to take full or 
+incremental exports of a given set of repositories for backup purposes,
+automatically placing the exported data into the `dump/` subdirectory
+of the system. The logic in the dump_repos command takes into account
+the following:
+
+  - at least 2 `full` dumps are kept at all times when using the `full`
+    dump type
+  - incremental dumps are removed if older than the oldest `full` dump
+  - incremental and full dumps are not taken if the repository has not
+    been modified since the last occurrence of any changes in the incremental
+    case or since the last full dump in the full case.
+
+It is suggested that the svnkit `dump_all` command be run regularly
+to ensure that data is properly backed up in case of accidental damage 
+to the live repositories. If large scale data loss is of a concern, the 
+dump area should be further backed up for long term storage. 
+
+An example set of crontab(5) files are included with the system 
+that are configured to perform full backups weekly and incremental backups
+nightly. If you wish to enable this type of backup policy, simply entable 
+cron for the svnbackup user and load the files as as follows ::
+
+  svn $ cat etc/*cron |crontab -
+
+It should be noted that on systems with login.conf(5) capability, such
+as FreeBSD 2.2.2 or later, the shared nature of the ~/.login_conf file 
+for the svnadmin and svnbkup users may prevent cron from functioning properly. 
+One possible solution to this problem is to remove ~/.login_conf from the 
+shared home directory. See the login.conf(5) manual page for more details.
+   
+No svnkit utility command yet exists to easily restore the dumped version of 
+a repository. Until such time that a restoration wrapper is written, the 
+'svnadmin load' command makes restoration of repository dumps fairly trivial. 
+
+Upgrading the SVN System Software
+=================================
+
+A rough guide.. this is covered in the svn book, but essentially:
+
+  - ensure dumps are up to date
+  - update software
+  - wipe repositories and restore
+
