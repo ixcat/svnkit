@@ -270,7 +270,7 @@ EOF
 		for dump in `ls -t ${dump_dir}/${repos}.*.gz`; do
 			if [ "$incr_found_full" ]; then
 				echo "# ===> removing $dump";
-				rm ${dump} ${dump}.rev;
+				rm -f ${dump} ${dump}.rev;
 				stale_dumps="$stale_dumps $dump";
 			else
 				match="`expr $dump : '.*\.last-full\.gz'`";
