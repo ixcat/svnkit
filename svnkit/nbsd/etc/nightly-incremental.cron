@@ -1,3 +1,5 @@
 # svnkit nightly-incremental.cron : nightly subversion incremental backups
 # $Id$
-13 9 * * 1-6 . ~/.profile; svnkit dump_all incremental
+# for PST-HST gap scheduling - use 0900
+# for CST GY user scheduling - use 1100
+13 9 * * 1-6 . ~/.profile; svnkit dump_all incremental 2>&1 |mailx -s 'svn incremental backup' svnadmin
