@@ -1,3 +1,3 @@
 # inetd.conf.svnserve: subversion/svnserve configuration
 # $Id$
-svn stream tcp nowait/5 svnadmin /usr/pkg/bin/svnserve svnserve -i -r /var/local/apps/svn/repos
+svn stream tcp nowait/5 svnadmin /usr/local/bin/svnserve svnserve -i -r /var/local/svn/repos
