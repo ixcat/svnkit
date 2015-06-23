@@ -63,7 +63,7 @@ installetc: installhome
 	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
 		$(SVN_HOME)/etc/policies/default
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
-		src/etc/policies/default/svnserve.conf \
+		src/etc/default-svnserve.conf \
 		$(SVN_HOME)/etc/policies/default/svnserve.conf
 
 installdoc:
