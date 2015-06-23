@@ -13,6 +13,7 @@ help_exit() {
 	echo "  --svnadmin_home: system home - default: $_svnadmin_home";
 	echo "  --destprefix: host svn binprefix - default: $_destprefix";
 	echo "  --svn-realm: svn server realm - default $_svn_realm";
+	exit 0;
 }
 
 print_config() {
