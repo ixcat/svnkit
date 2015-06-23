@@ -20,7 +20,7 @@ error_exit() {
 }
 
 checkvar() {
-	val="`eval echo \\$$1`"; echo $val;
+	val="`eval echo \\$$1`";
 	[ -z "$val" ] && error_exit "variable $1 not set ... exiting.";
 
 }
