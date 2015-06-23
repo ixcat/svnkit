@@ -11,6 +11,7 @@ files="${files} svnkit.txt";
 
 vars="";
 vars="${vars} SVNADMIN_HOME";
+vars="${vars} SVNADMIN_SH";
 vars="${vars} DESTPREFIX";
 vars="${vars} SVN_REALM";
 
@@ -31,6 +32,7 @@ substfile() {
 	# @DESTPREFIX@ # e.g. usr/local /usr/pkg /usr, etc.
 	# @SVN_REALM@ # svn realm name configured - default `hostname`? 
 	sed	-e "s:@SVNADMIN_HOME@:$SVNADMIN_HOME:g" \
+		-e "s:@SVNADMIN_SH@:$SVNADMIN_SH:g" \
 		-e "s:@DESTPREFIX@:$DESTPREFIX:g" \
 		-e "s:@SVN_REALM@:$SVN_REALM:g" \
 	${1}.in > ${1}

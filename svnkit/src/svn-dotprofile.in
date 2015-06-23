@@ -1,4 +1,4 @@
-#!/bin/sh
+#! @SVNADMIN_SH@
 # svn-dotprofile: user profile for subversion administrator account
 # $Id$
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#! @SVNADMIN_SH@
 # svnkit subversion administrative utility script
 # $Id$
 

@@ -6,6 +6,7 @@ SVN_GROUP=svnadmin
 SVNADMIN_HOME?=@SVNADMIN_HOME@
 DESTPREFIX?=@DESTPREFIX@
 SVN_REALM?=@SVN_REALM@
+SVN_SH?=@SVN_SH@
 
 all:
 	@echo "usage: make install - read makefile and svnkit.txt first"
@@ -38,20 +39,17 @@ installetc: installhome
 	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
 		$(SVNADMIN_HOME)/etc
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/svn.services \
+		$(SVNADMIN_HOME)/etc/svn.services 
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
 		src/etc/inetd.conf.svnserve \
 		$(SVNADMIN_HOME)/etc/inetd.conf.svnserve
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
-		svn.services \
-		$(SVNADMIN_HOME)/etc/svn.services 
-	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
-		svnadmin.bsdpasswd \
+		src/etc/svnadmin.bsdpasswd \
 		$(SVNADMIN_HOME)/etc/svnadmin.bsdpasswd
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
-		svnadmin.group \
+		src/etc/svnadmin.group \
 		$(SVNADMIN_HOME)/etc/svnadmin.group
-	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
-		svn.services \
-		$(SVNADMIN_HOME)/etc/svn.services 
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
 		src/etc/passwd $(SVNADMIN_HOME)/etc/passwd
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
@@ -77,6 +75,11 @@ installdoc:
 		$(SVNADMIN_HOME)/doc 
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
 		svnkit.txt $(SVNADMIN_HOME)/doc/svnkit.txt
+
+hackuser:
+	cat src/etc/svnadmin.group >> /etc/group
+	cat src/etc/svnadmin.bsdpasswd >> /etc/master.passwd
+	pwd_mkdb -p /etc/master.passwd
 
 distclean:
 	files="$${files} src/bin/svnkit"; \
