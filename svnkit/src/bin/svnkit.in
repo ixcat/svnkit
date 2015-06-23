@@ -5,7 +5,7 @@
 # Directory Tree Configuration
 # ----------------------------
 
-storage_root="/var/local/svn";
+storage_root="@SVNADMIN_HOME@";
 etc_dir="${storage_root}/etc";
 policy_dir="${etc_dir}/policies";
 repository_dir="${storage_root}/repos";

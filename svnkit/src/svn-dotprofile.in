@@ -3,18 +3,14 @@
 # $Id$
 
 umask 027;
-export SVNROOT="/var/local/apps/svn";
+export SVNROOT="@SVNADMIN_HOME@";
 export SVNDUMPS="${SVNROOT}/dumps";
 export SVNREPOS="${SVNROOT}/repos";
 
-if [ "`uname -s`" = "Linux" ]; then
-	BINPATH="/usr/bin:/usr/sbin:";
-else
-	BINPATH="/usr/pkg/bin:/usr/pkg/sbin:";
-fi
+BINPATH="@DESTPREFIX@/bin:@DESTPREFIX@/sbin";
 
 export PATH="${BINPATH}:${HOME}/bin:/sbin:/usr/sbin:${PATH}";
-export PS1="svn$ "
+export PS1="svnadmin$ "
 
 if [ -t 0 ]; then 
 	cat <<EOF
@@ -26,5 +22,4 @@ You will likely be using the 'svnkit' script -
 
 EOF
 fi
-
 

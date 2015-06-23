@@ -2,11 +2,11 @@
 # $Id$
 
 [general]
-realm = dfly1
+realm = @SVN_REALM@
 anon-access = none
 auth-access = write
-password-db = /var/local/svn/etc/passwd
-authz-db = /var/local/svn/etc/authz
+password-db = @SVNADMIN_HOME@/etc/passwd
+authz-db = @SVNADMIN_HOME@/etc/authz
 
 [miscellany]
 enable-auto-props = yes
