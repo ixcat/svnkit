@@ -43,24 +43,24 @@ To install the system, perform the following steps:
     document to the subversion install path. Currently, the files 
     are as follows::
 
-      nbsd
-      nbsd/archive
-      nbsd/bin
-      nbsd/bin/svnkit
-      nbsd/bin/svnshell
-      nbsd/dumps
-      nbsd/repos
-      nbsd/etc
-      nbsd/etc/policies
-      nbsd/etc/policies/default
-      nbsd/etc/policies/default/svnserve.conf
-      nbsd/etc/weekly-full.cron
-      nbsd/etc/passwd
-      nbsd/etc/authz
-      nbsd/etc/nightly-incremental.cron
-      nbsd/svn-dotprofile
-      nbsd/.profile
-      nbsd.mtree
+      src
+      src/archive
+      src/bin
+      src/bin/svnkit
+      src/bin/svnshell
+      src/dumps
+      src/repos
+      src/etc
+      src/etc/policies
+      src/etc/policies/default
+      src/etc/policies/default/svnserve.conf
+      src/etc/weekly-full.cron
+      src/etc/passwd
+      src/etc/authz
+      src/etc/nightly-incremental.cron
+      src/svn-dotprofile
+      src/.profile
+      src.mtree
       
     Each of these files and directories are set with mode 750 and permissions
     svnadmin:svnadmin, with the exception of the 'dumps' and 'archive' 
