@@ -4,6 +4,8 @@
 SVN_USER=svnadmin
 SVN_GROUP=svnadmin
 SVNADMIN_HOME?=@SVNADMIN_HOME@
+DESTPREFIX?=@DESTPREFIX@
+SVN_REALM?=@SVN_REALM@
 
 all:
 	@echo "usage: make install - read makefile and svnkit.txt first"
@@ -75,4 +77,14 @@ installdoc:
 		$(SVNADMIN_HOME)/doc 
 	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
 		svnkit.txt $(SVNADMIN_HOME)/doc/svnkit.txt
+
+distclean:
+	files="$${files} src/bin/svnkit"; \
+	files="$${files} src/etc/inetd.conf.svnserve"; \
+	files="$${files} src/etc/svnadmin.bsdpasswd"; \
+	files="$${files} src/etc/default-svnserve.conf"; \
+	files="$${files} src/svn-dotprofile"; \
+	files="$${files} Makefile"; \
+	files="$${files} svnkit.txt"; \
+	rm -f $$files
 
