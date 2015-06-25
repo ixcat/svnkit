@@ -1,0 +1,10 @@
+# $Id$
+# svnkit OMKFile
+# currently just for doc builds
+# 
+
+OMK_DOC_STYLE=		199technologies-default
+
+.include <omk.doc.mk>
+.include <omk.proj.mk>
+

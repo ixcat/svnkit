@@ -1,0 +1,93 @@
+# svnkit makefile
+# $Id$
+ 
+SVN_USER=svnadmin
+SVN_GROUP=svnadmin
+SVNADMIN_HOME?=@SVNADMIN_HOME@
+DESTPREFIX?=@DESTPREFIX@
+SVN_REALM?=@SVN_REALM@
+SVN_SH?=@SVN_SH@
+
+all:
+	@echo "usage: make install - read makefile and svnkit.txt first"
+
+install: installhome installbin installetc installdoc
+
+installhome: $(SVNADMIN_HOME)
+
+$(SVNADMIN_HOME):
+	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)
+	install -d -m 750 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/dumps
+	install -d -m 750 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/repos
+	install -d -m 750 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/archive
+
+installbin: installhome
+	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/bin
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/bin/svnshell $(SVNADMIN_HOME)/bin/svnshell
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/bin/svnkit $(SVNADMIN_HOME)/bin/svnkit
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/svn-dotprofile $(SVNADMIN_HOME)/.profile
+
+installetc: installhome
+	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/etc
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/svn.services \
+		$(SVNADMIN_HOME)/etc/svn.services 
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/inetd.conf.svnserve \
+		$(SVNADMIN_HOME)/etc/inetd.conf.svnserve
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/svnadmin.bsdpasswd \
+		$(SVNADMIN_HOME)/etc/svnadmin.bsdpasswd
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/svnadmin.group \
+		$(SVNADMIN_HOME)/etc/svnadmin.group
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/passwd $(SVNADMIN_HOME)/etc/passwd
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/authz $(SVNADMIN_HOME)/etc/authz
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/00HEADER.cron $(SVNADMIN_HOME)/etc/00HEADER.cron
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/weekly-full.cron \
+		$(SVNADMIN_HOME)/etc/weekly-full.cron
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/nightly-incremental.cron \
+		$(SVNADMIN_HOME)/etc/nightly-incremental.cron
+	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/etc/policies
+	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/etc/policies/default
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		src/etc/default-svnserve.conf \
+		$(SVNADMIN_HOME)/etc/policies/default/svnserve.conf
+
+installdoc:
+	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		$(SVNADMIN_HOME)/doc 
+	install -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+		svnkit.txt $(SVNADMIN_HOME)/doc/svnkit.txt
+
+hackuser:
+	cat src/etc/svnadmin.group >> /etc/group
+	cat src/etc/svnadmin.bsdpasswd >> /etc/master.passwd
+	pwd_mkdb -p /etc/master.passwd
+
+distclean:
+	files="$${files} src/bin/svnkit"; \
+	files="$${files} src/etc/inetd.conf.svnserve"; \
+	files="$${files} src/etc/svnadmin.bsdpasswd"; \
+	files="$${files} src/etc/default-svnserve.conf"; \
+	files="$${files} src/svn-dotprofile"; \
+	files="$${files} Makefile"; \
+	files="$${files} svnkit.txt"; \
+	rm -f $$files
+

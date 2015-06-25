@@ -1,0 +1,25 @@
+#! @SVNADMIN_SH@
+# svn-dotprofile: user profile for subversion administrator account
+# $Id$
+
+umask 027;
+export SVNROOT="@SVNADMIN_HOME@";
+export SVNDUMPS="${SVNROOT}/dumps";
+export SVNREPOS="${SVNROOT}/repos";
+
+BINPATH="@DESTPREFIX@/bin:@DESTPREFIX@/sbin";
+
+export PATH="${BINPATH}:${HOME}/bin:/sbin:/usr/sbin:${PATH}";
+export PS1="svnadmin$ "
+
+if [ -t 0 ]; then 
+	cat <<EOF
+
+Welcome subversion adminisrator!
+
+You will likely be using the 'svnkit' script - 
+  please run it with no arguments to see how it is used.
+
+EOF
+fi
+

@@ -1,0 +1,5 @@
+# svnkit weekly-full.cron : weekly subversion full backups
+# $Id$
+# for PST-HST gap scheduling - use 0900
+# for CST GY user scheduling - use 1100
+13 11 * * 7 . ~/.profile; svnkit dump_all full 2>&1 |mailx -s 'svn full backup' svnadmin
