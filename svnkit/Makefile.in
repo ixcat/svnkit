@@ -16,7 +16,7 @@ install: installhome installbin installetc installdoc
 installhome: $(SVNADMIN_HOME)
 
 $(SVNADMIN_HOME):
-	install -d -m 775 -o $(SVN_USER) -g $(SVN_GROUP) \
+	install -d -m 755 -o $(SVN_USER) -g $(SVN_GROUP) \
 		$(SVNADMIN_HOME)
 	install -d -m 750 -o $(SVN_USER) -g $(SVN_GROUP) \
 		$(SVNADMIN_HOME)/dumps
