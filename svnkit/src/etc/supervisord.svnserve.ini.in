@@ -1,0 +1,6 @@
+; svnserve supervisord configuration
+; $Id$
+[program:svnserve]
+user=svnadmin
+directory=@SVNADMIN_HOME@
+command=@DESTPREFIX@/bin/svnserve --daemon --foreground --pid-file=@SVNADMIN_HOME@/var/svnserve.pid -r @SVNADMIN_HOME@/repos

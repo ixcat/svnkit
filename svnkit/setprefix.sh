@@ -5,6 +5,7 @@ files="${files} src/bin/svnkit";
 files="${files} src/etc/inetd.conf.svnserve";
 files="${files} src/etc/svnadmin.bsdpasswd";
 files="${files} src/etc/default-svnserve.conf";
+files="${files} src/etc/supervisord.svnserve.ini";
 files="${files} src/svn-dotprofile";
 files="${files} Makefile";
 files="${files} svnkit.txt";
