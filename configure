@@ -1,7 +1,6 @@
 #! /bin/sh
 
 # svnkit configure script
-# $Id$
 
 _svnadmin_home="/var/svn";
 _svnadmin_sh="/bin/ksh";

@@ -1,5 +1,4 @@
 # svnkit makefile
-# $Id$
  
 SVN_USER=svnadmin
 SVN_GROUP=svnadmin

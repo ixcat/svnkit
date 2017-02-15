@@ -1,3 +1,2 @@
 # inetd.conf.svnserve: subversion/svnserve configuration
-# $Id$
 svn stream tcp nowait/5 svnadmin @DESTPREFIX@/bin/svnserve svnserve -i -r @SVNADMIN_HOME@/repos

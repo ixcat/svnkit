@@ -1,5 +1,4 @@
 # authz : site-local subversion path access permission
-# $Id$
 
 # allow all access by default
 [/]

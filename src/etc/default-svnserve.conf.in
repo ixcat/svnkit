@@ -1,5 +1,4 @@
 # svnserve.conf : site-local subversion configuration
-# $Id$
 
 [general]
 realm = @SVN_REALM@

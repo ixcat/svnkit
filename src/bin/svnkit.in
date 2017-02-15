@@ -1,6 +1,5 @@
 #! @SVNADMIN_SH@
 # svnkit subversion administrative utility script
-# $Id$
 
 # Directory Tree Configuration
 # ----------------------------

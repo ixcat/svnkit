@@ -1,6 +1,5 @@
 #! @SVNADMIN_SH@
 # svn-dotprofile: user profile for subversion administrator account
-# $Id$
 
 umask 027;
 export SVNROOT="@SVNADMIN_HOME@";
